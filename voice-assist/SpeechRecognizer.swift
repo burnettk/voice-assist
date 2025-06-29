@@ -122,7 +122,6 @@ class SpeechRecognizer: ObservableObject {
     
     private func stopTranscribing() {
         request?.endAudio()
-        audioEngine?.stop()
     }
 
     private static func prepareEngine() throws -> (AVAudioEngine, SFSpeechAudioBufferRecognitionRequest) {

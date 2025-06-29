@@ -8,14 +8,38 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var speechRecognizer = SpeechRecognizer()
+    @State private var isThrobbig = false
+
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            Button(action: {
+                speechRecognizer.recordButtonTapped()
+            }) {
+                Image(systemName: "mic.fill")
+                    .font(.system(size: 60))
+                    .foregroundColor(.white)
+                    .padding(30)
+                    .background(speechRecognizer.isRecording ? Color.red : Color.accentColor)
+                    .clipShape(Circle())
+                    .shadow(radius: 10)
+                    .scaleEffect(isThrobbig ? 1.1 : 1.0)
+            }
         }
         .padding()
+        .onChange(of: speechRecognizer.isRecording) { isRecording in
+            if isRecording {
+                // Start throbbing animation
+                withAnimation(.easeInOut(duration: 0.5).repeatForever(autoreverses: true)) {
+                    isThrobbig = true
+                }
+            } else {
+                // Stop throbbing animation
+                withAnimation(.spring()) {
+                    isThrobbig = false
+                }
+            }
+        }
     }
 }
 
